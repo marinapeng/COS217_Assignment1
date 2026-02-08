@@ -1,0 +1,9 @@
+
+Textual representation of the "Does the string have an unterminated
+comment (\*) in it" DFA. The DFA "accepts" a given sequence of
+characters if it contains no unterminated comments. The DFA
+"rejects" a given sequence of characters if the sequence contains an
+unterminated comment.
+
+-----------------------------------------------------------------------
+
