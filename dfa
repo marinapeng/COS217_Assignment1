@@ -34,19 +34,19 @@ COMMENT_STAR (/*...*) (reject)
       other: IN_COMMENT
 
 IN_STRING (accept)
-   ":  NORMAL (Action: print ")
-   \:  STRING_ESC
-   \n: IN_STRING (Action: print new line)
-   other: IN_STRING (Action: print char)
-
+      ":  NORMAL (Action: print ")
+      \:  STRING_ESC
+      \n: IN_STRING (Action: print new line)
+      other: IN_STRING (Action: print char)
+      
 STRING_ESC (accept)
-   any: IN_STRING (Action: print \ and char)
+      any: IN_STRING (Action: print \ and char)
 
 IN_CHAR (accept)
-   ':  NORMAL (Action: print ')
-   \:  CHAR_ESC
-   \n: IN_CHAR (Action: print new line)
-   other: IN_CHAR (Action: print char)
+      ':  NORMAL (Action: print ')
+      \:  CHAR_ESC
+      \n: IN_CHAR (Action: print new line)
+      other: IN_CHAR (Action: print char)
 
 CHAR_ESC (accept)
    any: IN_CHAR (Action: print \ and char)
