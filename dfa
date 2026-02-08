@@ -7,7 +7,7 @@ unterminated comment.
 
 -----------------------------------------------------------------------
 
-START (accept) <-- the start state
+NORMAL (accept) <-- the start state
       /: SLASH
       ": IN_STRING
       ': IN_CHAR
