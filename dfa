@@ -14,7 +14,7 @@ START (accept) <-- the start state
       \n: START (Action: print newline)
       other: START (Action: print char)
 
-SLASH (accept)
+SLASH (/) (accept)
       *: IN_COMMENT
       /: SLASH (Action: print /)
       ": IN_STRING (Action: print /, then ")
@@ -22,5 +22,32 @@ SLASH (accept)
       \n: START (Action: print /, then newline)
       other: START (Action: print /, then char)
 
-IN_COMMENT (reject)
+IN_COMMENT (/*) (reject)
+      *: COMMENT_STAR
+      \n: IN_COMMENT
+      other: IN_COMMENT
+
+COMMENT_STAR (/*...*) (reject)
+      /: START
+      *: COMMENT_STAR
+      \n: IN_COMMENT
+      other: IN_COMMENT
+
+IN_STRING (accept)
+   ":  NORMAL (Action: print ")
+   \:  STRING_ESC
+   \n: IN_STRING (Action: print newline)
+   other: IN_STRING (Action: print char)
+
+STRING_ESC (accept)
+   any: IN_STRING (Action: print \ and char)
+
+IN_CHAR (accept)
+   ':  NORMAL (Action: print ')
+   \:  CHAR_ESC
+   \n: IN_CHAR (Action: print newline)
+   other: IN_CHAR (Action: print char)
+
+CHAR_ESC (accept)
+   any: IN_CHAR (Action: print \ and char)
 
