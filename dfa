@@ -28,7 +28,7 @@ IN_COMMENT (/*) (reject)
       other: IN_COMMENT
 
 COMMENT_STAR (/*...*) (reject)
-      /: START
+      /: NORMAL
       *: COMMENT_STAR
       \n: IN_COMMENT (Action: print new line)
       other: IN_COMMENT
