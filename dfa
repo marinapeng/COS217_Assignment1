@@ -9,18 +9,18 @@ unterminated comment.
 
 NORMAL (accept) <-- the start state
       /: SLASH
-      ": IN_STRING
-      ': IN_CHAR
-      \n: START (Action: print new line)
-      other: START (Action: print char)
+      ": IN_STRING (Action: print ")
+      ': IN_CHAR (Action: print ')
+      \n: NORMAL (Action: print new line)
+      other: NORMAL (Action: print char)
 
 SLASH (/) (accept)
       *: IN_COMMENT (Action, print space)
-      /: SLASH (Action: print /)
+      /: SLASH (Action: print previous /, hold this /)
       ": IN_STRING (Action: print /, then ")
       ': IN_CHAR (Action: print /, then ')
-      \n: START (Action: print /, then new line)
-      other: START (Action: print /, then char)
+      \n: NORMAL (Action: print /, then new line)
+      other: NORMAL (Action: print /, then char)
 
 IN_COMMENT (/*) (reject)
       *: COMMENT_STAR
@@ -35,12 +35,12 @@ COMMENT_STAR (/*...*) (reject)
 
 IN_STRING (accept)
       ":  NORMAL (Action: print ")
-      \:  STRING_ESC
+      \:  STRING_ESC (Action: print \)
       \n: IN_STRING (Action: print new line)
       other: IN_STRING (Action: print char)
       
 STRING_ESC (accept)
-      any: IN_STRING (Action: print \ and char)
+      any: IN_STRING (Action: print char)
 
 IN_CHAR (accept)
       ':  NORMAL (Action: print ')
