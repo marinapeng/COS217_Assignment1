@@ -76,7 +76,7 @@ handleCommentStarState (int c) {
         state = NORMAL;
     }
     else if (c == '*') {
-        state = COMMENT_STAR
+        state = COMMENT_STAR;
     }
     else if (c == '\n') {
         putchar (c);
@@ -143,7 +143,7 @@ handleCharEscState (int c) {
 }
 
 /**/
-static int isAccepting (State s) {
+static int isAccepting (enum Statetype s) {
     return (s != IN_COMMENT && s != COMMENT_STAR);
 }
 
