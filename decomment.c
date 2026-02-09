@@ -176,6 +176,9 @@ int main (void) {
             case IN_COMMENT: 
                 state = handleInCommentState(c);
                 break; 
+            case COMMENT_STAR:
+                state = handleCommentStarState(c);
+                break;
             case IN_STRING: 
                 state = handleInStringState(c);
                 break;     
@@ -194,8 +197,7 @@ int main (void) {
         putchar('/');
     }
     if (!isAccepting(state)) {
-        printf(stderr, "Error: line %1d: unterminated comment\n", 
-            commentStartLine);
+        fprintf(stderr, "Error: line %d: unterminated comment\n", commentStartLine);
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;
