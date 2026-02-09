@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/**/
+/*defines constants representing each state in the DFA*/
 enum Statetype {NORMAL, SLASH, IN_COMMENT, COMMENT_STAR, 
     IN_STRING, STRING_ESC, IN_CHAR, CHAR_ESC};
 
-/**/
+/*Implements the NORMAL state of the DFA. c is the current
+input character. Writes c to stdout if appropriate. Returns
+the next DFA state. */
 enum Statetype
 handleNormalState (int c) {
     enum Statetype state;
@@ -25,16 +27,19 @@ handleNormalState (int c) {
     return state;
 }
 
-/**/
+/*Implements the SLASH state of the DFA. c is the current
+input character. A '/' has already been read and is being held. 
+Determines whether a comment begins or '/' should be printed.
+Writes appropriate output to stdout. Returns the next DFA state.*/
 enum Statetype
 handleSlashState (int c) {
     enum Statetype state;
     if (c == '*') {
-        putchar (' ');
+        putchar (' '); /*Beginning of a comment: replace with a single space*/
         state = IN_COMMENT;
     }
     else if (c == '/') {
-        putchar (c);
+        putchar (c); /*Prints previous '/', holds this '/'.*/
         state = SLASH;
     }
     else if (c == '"') {
@@ -53,7 +58,10 @@ handleSlashState (int c) {
     return state;
 }
 
-/**/
+/*Implements the IN_COMMENT state of the DFA. c is the current
+input character inside a block comment. Newlines are written to
+stdout to preserve line numbering. All other characters are discarded.
+Returns the next DFA state.*/
 enum Statetype
 handleInCommentState (int c) {
     enum Statetype state;
@@ -68,7 +76,10 @@ handleInCommentState (int c) {
     return state;
 }
 
-/**/
+/*/*Implements the COMMENT_STAR state of the DFA. c is the current
+input character after a '*' has been seen inside a block comment.
+Determines whether the comment ends. Preserves new lines. Returns
+the next DFA state.*/
 enum Statetype
 handleCommentStarState (int c) {
     enum Statetype state;
@@ -86,7 +97,10 @@ handleCommentStarState (int c) {
     return state;
 }
 
-/**/
+/*Implements the IN_STRING state of the DFA. c is the
+current character inside a string literal. Handeles
+excaped characters and closing quotes. Writes output
+to stdout. Returns the next DFA state.*/
 enum Statetype
 handleInStringState (int c) {
     enum Statetype state;
@@ -103,7 +117,9 @@ handleInStringState (int c) {
     return state;
 }
 
-/**/
+/*Implements the STRING_ESC state of the DFA. 
+c are the escaped characters inside a string
+literal. Writes c to stdout and returns to IN_STRING.*/
 enum Statetype
 handleStringEscState (int c) {
     enum Statetype state;
@@ -112,7 +128,10 @@ handleStringEscState (int c) {
     return state;
 }
 
-/**/
+/*Implements the IN_CHAR state of the DFA. c is the
+current character inside a char literal. Handeles
+excaped characters and closing quotes. Writes output
+to stdout. Returns the next DFA state.*/
 enum Statetype
 handleInCharState (int c) {
     enum Statetype state;
@@ -133,7 +152,9 @@ handleInCharState (int c) {
     return state;
 }
 
-/**/
+/*Implements the CHAR_ESC state of the DFA. 
+c are the escaped characters inside a char literal
+literal. Writes c to stdout and returns to IN_CHAR.*/
 enum Statetype
 handleCharEscState (int c) {
     enum Statetype state;
@@ -142,23 +163,31 @@ handleCharEscState (int c) {
     return state;
 }
 
-/**/
+/*Determines whether the DFA state is accepting or
+rejecting. Returns 1 if accepting, 0 if rejecting. 
+Rejecting states correspond to being inside an
+unterminated comment. */
 static int isAccepting (enum Statetype s) {
     return (s != IN_COMMENT && s != COMMENT_STAR);
 }
 
-/* Read text from stdin. Return 0. */
+/*Reads text from stdin, removes C90 block comments,
+and writes the result to stdout. Detects unterminated
+comments and reports an error. Returns EXIT_SUCCESS on 
+success and EXIT_FAILURE on error.*/
 int main (void) {
-    /*comment here */
+    /*variable that keeps track of the current character*/
     int c;
 
-    /*comment here*/
+    /*variable that keeps track of the current DFA state*/
     enum Statetype state = NORMAL;
 
-    /**/
+    /*variables to track current line number and comment
+    start line*/
     int currentLine = 1;
     int commentStartLine = 0;
 
+    /* determines which DFA state the text sequence ends in*/
     while ((c = getchar()) != EOF) {
         if (c == '\n') {
             currentLine++;
@@ -193,12 +222,19 @@ int main (void) {
                 break;
         }
     }
+
+    /* If the file ends right after a '/', print the '/'
+    before exiting the program. */
     if (state == SLASH) {
         putchar('/');
     }
+
+    /* Report unterminated comment if DFA ends in rejecting state */
     if (!isAccepting(state)) {
         fprintf(stderr, "Error: line %d: unterminated comment\n", commentStartLine);
         return EXIT_FAILURE;
     }
+
+    /* returns EXIT_SUCCESS if the file successfully decomments*/
     return EXIT_SUCCESS;
 }
