@@ -7,7 +7,7 @@ enum Statetype {NORMAL, SLASH, IN_COMMENT, COMMENT_STAR,
 
 /**/
 enum Statetype
-handleNormalStage (int c) {
+handleNormalState (int c) {
     enum Statetype state;
     if (c == '/') {
         state = SLASH;
