@@ -18,9 +18,10 @@ handleNormalStage (int c) {
     }
     else if (c == '\'') {
         putchar (c);
-        state = NORMAL;
+        state = IN_CHAR;
     }
     putchar(c);
+    state = NORMAL;
     return state;
 }
 
@@ -59,7 +60,7 @@ handleInCommentState (int c) {
     if (c == '*') {
         state = COMMENT_STAR;
     }
-    else if (c == '\'') {
+    else if (c == '\n') {
         putchar (c);
         state = IN_COMMENT;
     }
@@ -69,7 +70,7 @@ handleInCommentState (int c) {
 
 /**/
 enum Statetype
-handleCommentStateState (int c) {
+handleCommentStarState (int c) {
     enum Statetype state;
     if (c == '/') {
         state = NORMAL;
@@ -77,7 +78,7 @@ handleCommentStateState (int c) {
     else if (c == '*') {
         state = COMMENT_STAR
     }
-    else if (c == '\'') {
+    else if (c == '\n') {
         putchar (c);
         state = IN_COMMENT;
     }
@@ -93,13 +94,9 @@ handleInStringState (int c) {
         putchar (c);
         state = NORMAL;
     }
-    else if (c == '\'') {
+    else if (c == '\\') {
         putchar (c);
         state = STRING_ESC;
-    }
-    else if (c == '\n') {
-        putchar (c);
-        state = IN_STRING;
     }
     putchar (c);
     state = IN_STRING;
