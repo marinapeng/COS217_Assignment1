@@ -120,7 +120,7 @@ handleInCharState (int c) {
         putchar (c);
         state = NORMAL;
     }
-    else if (c == '\'') {
+    else if (c == '\\') {
         putchar (c);
         state = CHAR_ESC;
     }
@@ -142,6 +142,11 @@ handleCharEscState (int c) {
     return state;
 }
 
+/**/
+static int isAccepting (State s) {
+    return (s != IN_COMMENT && s != COMMENT_STAR);
+}
+
 /* Read text from stdin. Return 0. */
 int main (void) {
     /*comment here */
@@ -150,12 +155,22 @@ int main (void) {
     /*comment here*/
     enum Statetype state = NORMAL;
 
+    /**/
+    int currentLine = 1;
+    int commentStartLine = 0;
+
     while ((c = getchar()) != EOF) {
+        if (c == '\n') {
+            currentLine++;
+        }
         switch (state) {
             case NORMAL:
                 state = handleNormalState(c);
                 break;
             case SLASH: 
+                if (c == '*') {
+                    commentStartLine = currentLine;
+                }
                 state = handleSlashState(c);
                 break;
             case IN_COMMENT: 
@@ -175,5 +190,13 @@ int main (void) {
                 break;
         }
     }
-    return 0;
+    if (state == SLASH) {
+        putchar('/');
+    }
+    if (!isAccepting(state)) {
+        printf(stderr, "Error: line %1d: unterminated comment\n", 
+            commentStartLine);
+        return EXIT_FAILURE;
+    }
+    return EXIT_SUCCESS;
 }
