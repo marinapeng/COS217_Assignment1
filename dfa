@@ -21,7 +21,6 @@ SLASH (/) (accept)
       \n: NORMAL (Action: print /, then new line)
       other: NORMAL (Action: print /, then char)
 
-IN_COMMENT (/*) (reject)
       *: COMMENT_STAR
       \n: IN_COMMENT (Action: print new line)
       other: IN_COMMENT
