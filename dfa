@@ -1,6 +1,6 @@
 
 Textual representation of the "Does the string have an unterminated
-comment (\*) in it" DFA. The DFA "accepts" a given sequence of
+comment (/*...*/) in it" DFA. The DFA "accepts" a given sequence of
 characters if it contains no unterminated comments. The DFA
 "rejects" a given sequence of characters if the sequence contains an
 unterminated comment.
@@ -11,7 +11,6 @@ NORMAL (accept) <-- the start state
       /: SLASH
       ": IN_STRING (Action: print ")
       ': IN_CHAR (Action: print ')
-      \n: NORMAL (Action: print new line)
       other: NORMAL (Action: print char)
 
 SLASH (/) (accept)
@@ -36,8 +35,7 @@ COMMENT_STAR (/*...*) (reject)
 IN_STRING (accept)
       ":  NORMAL (Action: print ")
       \:  STRING_ESC (Action: print \)
-      \n: IN_STRING (Action: print new line)
-      other: IN_STRING (Action: print char)
+      other: IN_STRING (Action: print char, incl \n)
       
 STRING_ESC (accept)
       any: IN_STRING (Action: print char)
@@ -45,9 +43,8 @@ STRING_ESC (accept)
 IN_CHAR (accept)
       ':  NORMAL (Action: print ')
       \:  CHAR_ESC (Action: print \)
-      \n: IN_CHAR (Action: print new line)
       other: IN_CHAR (Action: print char)
 
 CHAR_ESC (accept)
-      any: IN_CHAR (Action: print char)
+      any: IN_CHAR (Action: print char, incl \n)
 
