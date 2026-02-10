@@ -166,9 +166,6 @@ int main (void) {
 
     /* determines which DFA state the text sequence ends in*/
     while ((c = getchar()) != EOF) {
-        if (c == '\n') {
-            currentLine++;
-        }
         switch (state) {
             case NORMAL:
                 state = handleNormalState(c);
@@ -197,6 +194,9 @@ int main (void) {
             case CHAR_ESC: 
                 state = handleCharEscState(c);
                 break;
+        }
+        if (c == '\n') {
+            currentLine++;
         }
     }
 
