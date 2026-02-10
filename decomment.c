@@ -30,7 +30,7 @@ Determines whether a comment begins or '/' should be printed.
 Writes appropriate output to stdout. Returns the next DFA state.*/
 enum Statetype handleSlashState (int c) {
     if (c == '*') {
-        putchar (' '); /*Beginning of a comment: replace with a single space*/
+        putchar (' '); /*Beginning of a comment: replace with  space*/
         return IN_COMMENT;
     }
     else if (c == '/') {
@@ -208,7 +208,8 @@ int main (void) {
 
     /* Report unterminated comment if DFA ends in rejecting state */
     if (!isAccepting(state)) {
-        fprintf(stderr, "Error: line %d: unterminated comment\n", commentStartLine);
+        fprintf(stderr, "Error: line %d: unterminated comment\n",
+                commentStartLine);
         return EXIT_FAILURE;
     }
 
