@@ -8,8 +8,7 @@ enum Statetype {NORMAL, SLASH, IN_COMMENT, COMMENT_STAR,
 /*Implements the NORMAL state of the DFA. c is the current
 input character. Writes c to stdout if appropriate. Returns
 the next DFA state. */
-enum Statetype
-handleNormalState (int c) {
+enum Statetype handleNormalState (int c) {
     if (c == '/') {
         return SLASH;
     }
@@ -48,6 +47,11 @@ enum Statetype handleSlashState (int c) {
         putchar (c);
         return IN_CHAR;
     }
+    else if (c == '\n') {
+        putchar('/');
+        putchar('\n');
+        return NORMAL;
+    }
     putchar ('/');
     putchar (c);
     return NORMAL;
@@ -68,7 +72,7 @@ enum Statetype handleInCommentState (int c) {
     return IN_COMMENT;
 }
 
-/*/*Implements the COMMENT_STAR state of the DFA. c is the current
+/*Implements the COMMENT_STAR state of the DFA. c is the current
 input character after a '*' has been seen inside a block comment.
 Determines whether the comment ends. Preserves new lines. Returns
 the next DFA state.*/
@@ -116,17 +120,13 @@ current character inside a char literal. Handeles
 excaped characters and closing quotes. Writes output
 to stdout. Returns the next DFA state.*/
 enum Statetype handleInCharState (int c) {
-    if (c == '"') {
+    if (c == '\'') {
         putchar (c);
         return NORMAL;
     }
     else if (c == '\\') {
         putchar (c);
         return CHAR_ESC;
-    }
-    else if (c == '\n') {
-        putchar (c);
-        return IN_CHAR;
     }
     putchar (c);
     return IN_CHAR;
