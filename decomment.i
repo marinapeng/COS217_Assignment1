@@ -875,18 +875,19 @@ int main (void) {
 # 211 "decomment.c" 3 4
                stderr
 # 211 "decomment.c"
-                     , "Error: line %d: unterminated comment\n", commentStartLine);
+                     , "Error: line %d: unterminated comment\n",
+                commentStartLine);
         return 
-# 212 "decomment.c" 3 4
+# 213 "decomment.c" 3 4
               1
-# 212 "decomment.c"
+# 213 "decomment.c"
                           ;
     }
 
 
     return 
-# 216 "decomment.c" 3 4
+# 217 "decomment.c" 3 4
           0
-# 216 "decomment.c"
+# 217 "decomment.c"
                       ;
 }
